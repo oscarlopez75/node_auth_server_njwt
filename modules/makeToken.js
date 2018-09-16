@@ -8,7 +8,7 @@ const mongoose = require('mongoose');
 var makeToken = function(username, role){
   return new Promise((resolve, reject) => {
 
-    var signingKey = secureRandom(512, {type: 'Buffer'}); // Create a highly random byte array of 256 bytes
+    var signingKey = secureRandom(512, {type: 'Buffer'}); // Create a highly random byte array of 512 bytes
 
     var claims = {
       login: username,  // The URL of your service
@@ -16,7 +16,7 @@ var makeToken = function(username, role){
     }
 
     var jwt = nJwt.create(claims,signingKey, 'HS512');
-    jwt.setExpiration(new Date().getTime() + (120*60*1000)); // One hour from now
+    jwt.setExpiration(new Date().getTime() + (120*60*1000)); // Two hours from now
     var jwtCompact = jwt.compact();
     writeFile(jwt, jwtCompact, signingKey)
       .then(() => {
