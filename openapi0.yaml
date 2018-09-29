@@ -65,6 +65,26 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
+  /login/checkToken:
+    get:
+      description: Checks the validity of the token
+      operationId: checktoken
+      parameters:
+        - name: Token info
+          require: true
+          in: header
+          description: Checks token
+          schema:
+            $ref: "#/definitions/TokenBody"
+      responses:
+        "200":
+          description: Token verification result
+          schema:
+            $ref: "#/definitions/TokenCheck"
+        default:
+          description: Error
+          schema:
+            $ref: "#/definitions/ErrorResponse"
 
 
 # complex objects have schema definitions
@@ -98,7 +118,7 @@ definitions:
       addrole:
         type: string
         description: User Role
-
+        
   TokenBody:
     type: string
     properties:

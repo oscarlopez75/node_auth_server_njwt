@@ -65,7 +65,7 @@ paths:
           schema:
             $ref: "#/definitions/ErrorResponse"
 
-
+  
 
 # complex objects have schema definitions
 definitions:

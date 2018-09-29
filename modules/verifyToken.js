@@ -6,6 +6,7 @@ var Base64 = require('js-base64').Base64;
 
 var verifyToken = function(token){
   return new Promise((resolve, reject) => {
+
     try {
       var payLoadUrl = token.split('.')[1];
       var payLoadBase64 = payLoadUrl.replace('-', '+').replace('_', '/');
@@ -23,7 +24,7 @@ var verifyToken = function(token){
       .then((doc) => {
         if(doc.length == 1){
           nJwt.verify(token,doc[0].signingKey, 'HS512', function(err,verifiedJwt){
-            if(err){              
+            if(err){
               reject(err); // Token has expired, has been tampered with, etc
             }else{
               resolve(verifiedJwt); // Will contain the header and body
