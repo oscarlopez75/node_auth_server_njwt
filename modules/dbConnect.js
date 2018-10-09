@@ -24,14 +24,15 @@ class Database {
 
 }
 
-var checkCon = function() {
-  return new Promise((resolve, reject) => {
-    if(mongoose.connection.readyState){
-      resolve();
-    }else{
-      reject('No database connection. please check with support');
-    }
-  });
+
+var checkCon = function(req, res, next) {
+
+  if(mongoose.connection.readyState){
+    next();
+  }else{
+    res.status(400).json({message: 'Shit, cannot connect to the database'});
+  }
+
 };
 
 module.exports = new Database()

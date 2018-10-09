@@ -13,6 +13,10 @@ var verifyToken = require('../modules/verifyToken');
 
 var router = express.Router();
 
+
+router.use('/', connect.checkCon)
+
+
 router.get('/', function(req, res){
   res.json({message:"Welcome to the user validation api"});
 });
@@ -20,51 +24,46 @@ router.get('/', function(req, res){
 
 router.post('/', (req, res, next) => {
 
-  connect.checkCon()
-    .then(check_user.userok.bind(null, req.body.username, req.body.password, req.ip))
-    .then(function(role){
-      makeToken.makeToken(req.body.username, role)
-        .then((token) => {
-          res.status(200).json({
-            username: req.body.username,
-            role: role,
-            jwt: token
-          });
-        })
-        .catch(function(err){
-          res.status(400).json({message: err});
-        })
-    })
-    .catch(function(err){
-      //console.log("Error from router.js " + err);
-      res.status(400).json({message: err});
-    });
+    check_user.userok(req.body.username, req.body.password, req.ip)
+      .then(function(role){
+        makeToken.makeToken(req.body.username, role)
+          .then((token) => {
+            res.status(200).json({
+              username: req.body.username,
+              role: role,
+              jwt: token
+            });
+          })
+          .catch(function(err){
+            res.status(400).json({message: err});
+          })
+      })
+      .catch(function(err){
+        //console.log("Error from router.js " + err);
+        res.status(400).json({message: err});
+      });
 
 });
 
 
-
-
-
 router.post('/newuser', (req, res, next) => {
 
-  connect.checkCon()
-    .then(check_user.userok.bind(null, req.body.username, req.body.password, req.ip))
-    .then(function(){
-      useradd.useradd(req.body.addusername, req.body.addpassword, req.body.addrole, function(message, response){
-        if (response){
-          res.status(200).json({
-            message: message
-          });
-        }else{
-          res.status(400).json({message: message});
-        }
+    check_user.userok(req.body.username, req.body.password, req.ip)
+      .then(function(){
+        useradd.useradd(req.body.addusername, req.body.addpassword, req.body.addrole, function(message, response){
+          if (response){
+            res.status(200).json({
+              message: message
+            });
+          }else{
+            res.status(400).json({message: message});
+          }
+        });
+      })
+      .catch(function(err){
+        //console.log("Error from router.js " + err);
+        res.status(400).json({message: err});
       });
-    })
-    .catch(function(err){
-      //console.log("Error from router.js " + err);
-      res.status(400).json({message: err});
-    });
 
 });
 
